@@ -23,6 +23,7 @@
         android:layout_width="327dp"
         android:layout_height="93dp"
         android:drawableStart="@mipmap/ic_launcher"
+        android:padding="10dp"
         android:ems="10"
         android:hint="Your name..."
         android:inputType="textPersonName"
