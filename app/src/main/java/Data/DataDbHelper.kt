@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.util.concurrent.locks.Condition
 
 class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION){
 
@@ -22,10 +23,9 @@ class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, n
 
     override fun onCreate(db: SQLiteDatabase?) {
         db!!.execSQL("CREATE TABLE "+Tables.Persons.TABLE_NAME+" (" +
-                Tables.Persons._ID+ " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                Tables.Persons._ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Tables.Persons.COLUMN_NAME + " TEXT NOT NULL," +
-                Tables.Persons.COLUMN_AGE + " TEXT NOT NULL," +
-                Tables.Persons.COLUMN_TYPE + " TEXT NOT NULL)");
+                Tables.Persons.COLUMN_AGE + " TEXT NOT NULL)");
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -35,7 +35,6 @@ class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, n
     fun insert(person: List<Person>) {
         values.put(Tables.Persons.COLUMN_NAME,person[0].getName())
         values.put(Tables.Persons.COLUMN_AGE,person[0].getAge())
-        values.put(Tables.Persons.COLUMN_TYPE,person[0].getType())
         db.insert(Tables.Persons.TABLE_NAME,null,values)
     }
 }

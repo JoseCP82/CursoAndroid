@@ -4,14 +4,11 @@ class Person (){
 
     private var id: Int = 0
     private var name: String = ""
-    private var age: Int = 0
-    private var type: String = ""
+    private var age: String = ""
 
-    constructor(id: Int, name: String, age: Int, type: String) : this() {
-        this.id=id
+    constructor(name: String, age: String) : this() {
         this.name=name
         this.age=age
-        this.type=type
     }
 
     fun getId():Int {
@@ -22,11 +19,7 @@ class Person (){
         return name
     }
 
-    fun getAge():Int {
+    fun getAge():String {
         return age
-    }
-
-    fun getType(): String {
-        return type
     }
 }

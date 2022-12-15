@@ -9,8 +9,7 @@ class Tables {
             val TABLE_NAME="persons"
             val COLUMN_NAME="name"
             val COLUMN_AGE="age"
-            val COLUMN_TYPE="type"
-            var persons: MutableList<Person>=ArrayList()
+            var persons: MutableList<Person> = ArrayList()
         }
     }
 }
