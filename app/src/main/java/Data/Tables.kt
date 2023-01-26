@@ -1,15 +1,15 @@
 package Data
 
-import Model.Person
+import Model.Contact
 
 class Tables {
-    abstract class Persons {
+    abstract class Contacts {
         companion object{
             val _ID="_id"
-            val TABLE_NAME="persons"
+            val TABLE_NAME="contacts"
             val COLUMN_NAME="name"
-            val COLUMN_AGE="age"
-            var persons: MutableList<Person> = ArrayList()
+            val COLUMN_PHONE="phone"
+            var contacts: MutableList<Contact> = ArrayList()
         }
     }
 }
