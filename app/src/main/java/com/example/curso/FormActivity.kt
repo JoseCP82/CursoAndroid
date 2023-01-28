@@ -8,16 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 
 class FormActivity : AppCompatActivity() {
 
-    lateinit var editName: EditText
-    lateinit var editPhone: EditText
-
-    private var db: DataDbHelper?=null
-    private var list: MutableList<Contact> = ArrayList()
+    private lateinit var editName: EditText
+    private lateinit var editPhone: EditText
+    private lateinit var editDate: EditText
+    private var db:DataDbHelper?=null
+    private lateinit var sp: Spinner
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,27 +28,54 @@ class FormActivity : AppCompatActivity() {
 
         editName=findViewById(R.id.editName)
         editPhone=findViewById(R.id.editPhone)
+        editDate=findViewById(R.id.editDate)
+        editDate.setOnClickListener{ showDatePickerDialog() }
 
-        db= DataDbHelper(this )
+        val phoneTypes:  ArrayList<String> = ArrayList()
+        phoneTypes.add("Home")
+        phoneTypes.add("Cell")
+        phoneTypes.add("Other")
+        val adp: ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, phoneTypes)
+        sp = findViewById(R.id.spinnerPhoneType)
+        sp.setAdapter(adp)
     }
 
-    fun addData() {
-        list!!.add(Contact(editName.text.toString(), editPhone.text.toString()))
-        db!!.insert(list)
-        editName.setText("")
-        editPhone.setText("")
+    private fun showDatePickerDialog() {
+        val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
+        datePicker.show(supportFragmentManager, "datePicker")
+    }
+
+    fun onDateSelected(day:Int, month:Int, year:Int){
+        editDate.setText("$day/$month/$year")
+    }
+
+    private fun addData() {
+        db= DataDbHelper(this)
+        if(editName.text.isEmpty() || editPhone.text.isEmpty()) {
+            Toast.makeText(this, "Please enter required fields.",Toast.LENGTH_SHORT).show()
+        } else {
+            val result = db!!.insertContact(Contact(editName.text.toString(), editPhone.text.toString(),
+                                            editDate.text.toString(), sp.selectedItemId.toString()))
+            if(result>-1){
+                Toast.makeText(applicationContext, "Contact saved successfully.",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "Contact no saved..",Toast.LENGTH_SHORT).show()
+            }
+            try {
+                Thread.sleep(1000)
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            finish()
+        }
     }
 
     fun backView(view: View) {
-        try {
-            addData()
-            Toast.makeText(applicationContext,"Contact saved successfully!",Toast.LENGTH_SHORT).show()
-            Thread.sleep(1000)
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        }
+        addData()
+    }
 
-        val back = Intent(this,MainActivity::class.java)
-        finishActivity(0)
+    fun removeConctact(view: View, id: Int) {
+
+        finish()
     }
 }

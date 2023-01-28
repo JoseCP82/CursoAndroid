@@ -9,6 +9,8 @@ class Tables {
             val TABLE_NAME="contacts"
             val COLUMN_NAME="name"
             val COLUMN_PHONE="phone"
+            val COLUMN_DATE="date"
+            val COLUMN_PHONETYPE="phoneType"
             var contacts: MutableList<Contact> = ArrayList()
         }
     }
