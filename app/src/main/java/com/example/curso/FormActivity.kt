@@ -57,10 +57,10 @@ class FormActivity : AppCompatActivity() {
         db= DataDbHelper(this)
         var contactToModify: Contact? = db!!.getContactById(idContact)
         if (contactToModify != null) {
-            editName.setText(contactToModify.getName().toString())
-            editPhone.setText(contactToModify.getPhone().toString())
-            editDate.setText(contactToModify.getDate().toString())
-            editPhone.setText(contactToModify.getPhone().toString())
+            editName.setText(contactToModify.getName())
+            editPhone.setText(contactToModify.getPhone())
+            editDate.setText(contactToModify.getDate())
+            editPhone.setText(contactToModify.getPhone())
             sp.setSelection(contactToModify.getPhoneType().toInt())
         }
     }
@@ -75,29 +75,30 @@ class FormActivity : AppCompatActivity() {
         editDate.setText("$day/$monthFixed/$year")
     }
 
-    private fun addData() {
+    fun addContact(view: View) {
         db= DataDbHelper(this)
+        val contact = Contact(editName.text.toString(), editPhone.text.toString(),
+            editDate.text.toString(), sp.selectedItemId.toString())
+        var result: Long = -1
+
         if(editName.text.isEmpty() || editPhone.text.isEmpty()) {
             Toast.makeText(this, "Please enter required fields.",Toast.LENGTH_SHORT).show()
         } else {
-            val result = db!!.insertContact(Contact(editName.text.toString(), editPhone.text.toString(),
-                                            editDate.text.toString(), sp.selectedItemId.toString()))
+            if(idContact>-1) { //Update
+                contact.setId(idContact)
+                result = db!!.updateContact(contact).toLong()
+            }
+            else { //Create
+                result = db!!.insertContact(contact)
+            }
+
             if(result>-1){
                 Toast.makeText(applicationContext, "Contact saved successfully.",Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(applicationContext, "Contact not saved.",Toast.LENGTH_SHORT).show()
             }
-            try {
-                Thread.sleep(1000)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
             finish()
         }
-    }
-
-    fun backView(view: View) {
-        addData()
     }
 
     fun removeContact(view: View) {

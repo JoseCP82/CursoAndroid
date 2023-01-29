@@ -36,6 +36,10 @@ class Contact() {
         return id;
     }
 
+    fun setId(id: Int) {
+        this.id = id
+    }
+
     fun getName():String {
         return name
     }

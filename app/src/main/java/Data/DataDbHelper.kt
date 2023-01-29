@@ -114,6 +114,23 @@ class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, n
         return contacts
     }
 
+    fun updateContact(contact: Contact): Int {
+
+        Log.i("Update",contact.toString())
+
+        val args = arrayOf(contact.getId().toString())
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+
+        contentValues.put(Tables.Contacts.COLUMN_NAME, contact.getName())
+        contentValues.put(Tables.Contacts.COLUMN_PHONE, contact.getPhone())
+        contentValues.put(Tables.Contacts.COLUMN_DATE, contact.getDate())
+        contentValues.put(Tables.Contacts.COLUMN_PHONETYPE, contact.getPhoneType())
+        val result = db.update(Tables.Contacts.TABLE_NAME, contentValues," _id = ?", args)
+        db.close()
+        return result
+    }
+
     fun deleteContact(id:Int) : Int{
         val args = arrayOf(id.toString())
         val db = this.writableDatabase
