@@ -22,5 +22,6 @@ class AboutActivity : AppCompatActivity() {
 
     fun closeAbout(){
         finish()
+        System.exit(0)
     }
 }

@@ -11,6 +11,14 @@ class Contact() {
     private var date: String = ""
     private var phoneType: String = ""
 
+    constructor(id: Int, name: String, phone: String, date: String, phoneType: String) : this() {
+        this.id=id
+        this.name=name
+        this.phone=phone
+        this.date=date
+        this.phoneType=phoneType
+    }
+
     constructor(name: String, phone: String, date: String, phoneType: String) : this() {
         this.name=name
         this.phone=phone

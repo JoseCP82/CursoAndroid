@@ -46,6 +46,42 @@ class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
     @SuppressLint("Range")
+    fun getContactById(id: Int): Contact? {
+        var result: Contact? = null
+        val query ="SELECT * FROM "+Tables.Contacts.TABLE_NAME+" WHERE "+Tables.Contacts._ID+" = "+id
+        val db = this.readableDatabase
+        val cursor: Cursor?
+
+        try {
+            cursor = db.rawQuery(query, null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            db.execSQL(query)
+            return result
+        }
+
+        var id: Int
+        var name: String
+        var phone: String
+        var date: String
+        var phoneType: String
+
+        if(cursor.moveToFirst()) {
+            do {
+                id=cursor.getInt(cursor.getColumnIndex(Tables.Contacts._ID))
+                name=cursor.getString(cursor.getColumnIndex(Tables.Contacts.COLUMN_NAME))
+                phone=cursor.getString(cursor.getColumnIndex(Tables.Contacts.COLUMN_PHONE))
+                date=cursor.getString(cursor.getColumnIndex(Tables.Contacts.COLUMN_DATE))
+                phoneType=cursor.getString(cursor.getColumnIndex(Tables.Contacts.COLUMN_PHONETYPE))
+
+                result = Contact(id=id, name=name, phone=phone, date=date, phoneType=phoneType)
+            }while(cursor.moveToNext())
+        }
+        db.close()
+        return result
+    }
+
+    @SuppressLint("Range")
     fun getAllContacts(): ArrayList<Contact> {
         val contacts: ArrayList<Contact> = ArrayList()
         val query = "SELECT * FROM "+Tables.Contacts.TABLE_NAME
@@ -74,6 +110,16 @@ class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, n
                 contacts.add(contact)
             }while(cursor.moveToNext())
         }
+        db.close()
         return contacts
+    }
+
+    fun deleteContact(id:Int) : Int{
+        val args = arrayOf(id.toString())
+        val db = this.writableDatabase
+        val result = db.delete(Tables.Contacts.TABLE_NAME, " _id = ?", args)
+        //val result = db.execSQL("DELETE FROM "+Tables.Contacts.TABLE_NAME+" WHERE _id = "+id)
+        db.close()
+        return result
     }
 }

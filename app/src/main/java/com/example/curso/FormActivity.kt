@@ -3,23 +3,29 @@ package com.example.curso
 import Data.DataDbHelper
 import Model.Contact
 import android.annotation.SuppressLint
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 
 class FormActivity : AppCompatActivity() {
 
     private lateinit var editName: EditText
     private lateinit var editPhone: EditText
     private lateinit var editDate: EditText
+    private lateinit var buttonDelete: Button
+    private lateinit var buttonUpdate: Button
+    private lateinit var textView: TextView
     private var db:DataDbHelper?=null
     private lateinit var sp: Spinner
+    private var idContact: Int = -1
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +36,9 @@ class FormActivity : AppCompatActivity() {
         editPhone=findViewById(R.id.editPhone)
         editDate=findViewById(R.id.editDate)
         editDate.setOnClickListener{ showDatePickerDialog() }
+        buttonDelete=findViewById(R.id.buttonDelete)
+        buttonUpdate=findViewById(R.id.buttonBack)
+        textView=findViewById(R.id.textView)
 
         val phoneTypes:  ArrayList<String> = ArrayList()
         phoneTypes.add("Home")
@@ -38,6 +47,22 @@ class FormActivity : AppCompatActivity() {
         val adp: ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, phoneTypes)
         sp = findViewById(R.id.spinnerPhoneType)
         sp.setAdapter(adp)
+
+        idContact = intent.getIntExtra("idContact",-1)
+        if(idContact>-1){
+            buttonDelete.visibility=View.VISIBLE
+            buttonUpdate.setText("Update")
+            textView.setText("Update/Remove Contact")
+        }
+        db= DataDbHelper(this)
+        var contactToModify: Contact? = db!!.getContactById(idContact)
+        if (contactToModify != null) {
+            editName.setText(contactToModify.getName().toString())
+            editPhone.setText(contactToModify.getPhone().toString())
+            editDate.setText(contactToModify.getDate().toString())
+            editPhone.setText(contactToModify.getPhone().toString())
+            sp.setSelection(contactToModify.getPhoneType().toInt())
+        }
     }
 
     private fun showDatePickerDialog() {
@@ -46,7 +71,8 @@ class FormActivity : AppCompatActivity() {
     }
 
     fun onDateSelected(day:Int, month:Int, year:Int){
-        editDate.setText("$day/$month/$year")
+        var monthFixed=month+1
+        editDate.setText("$day/$monthFixed/$year")
     }
 
     private fun addData() {
@@ -59,7 +85,7 @@ class FormActivity : AppCompatActivity() {
             if(result>-1){
                 Toast.makeText(applicationContext, "Contact saved successfully.",Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(applicationContext, "Contact no saved..",Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Contact not saved.",Toast.LENGTH_SHORT).show()
             }
             try {
                 Thread.sleep(1000)
@@ -74,8 +100,10 @@ class FormActivity : AppCompatActivity() {
         addData()
     }
 
-    fun removeConctact(view: View, id: Int) {
-
+    fun removeContact(view: View) {
+        db= DataDbHelper(this)
+        db!!.deleteContact(idContact)
+        Toast.makeText(applicationContext, "Contact removed successfully.",Toast.LENGTH_SHORT).show()
         finish()
     }
 }

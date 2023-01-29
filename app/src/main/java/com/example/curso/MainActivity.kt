@@ -13,12 +13,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.FieldPosition
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnContactClickListener {
 
     private lateinit var recyclerViewContacts : RecyclerView
-    private val contactAdapter : ContactAdapter = ContactAdapter()
+    private var contactAdapter : ContactAdapter = ContactAdapter(this)
     private var db: DataDbHelper?=null
+    private lateinit var contacts:ArrayList<Contact>
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,14 +42,21 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.about -> startActivity(Intent(this, AboutActivity::class.java))
-            R.id.exit -> finish()
+            R.id.exit -> System.exit(0)
         }
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onContactItemClicked(position: Int) {
+        val intent = Intent(this, FormActivity::class.java)
+        intent.putExtra("idContact", contacts[position].getId())
+        startActivity(intent)
+    }
+
     private fun loadData() {
         // Inicializa el Adaptador que almacenará y renderizará los datos del RecyclerView
-        contactAdapter.ContactAdapter(getContacts(), this)
+        contacts=getContacts()
+        contactAdapter.ContactAdapter(contacts, this)
 
         // Inicializa el RecyclerView y le asocia el Adaptador con los datos
         recyclerViewContacts = findViewById(R.id.recyclerViewContacts) as RecyclerView
