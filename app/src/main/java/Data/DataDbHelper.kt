@@ -33,7 +33,6 @@ class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, n
 
     fun insertContact(contact: Contact): Long {
         val db = this.writableDatabase
-
         val contentValues = ContentValues()
         contentValues.put(Tables.Contacts.COLUMN_NAME, contact.getName())
         contentValues.put(Tables.Contacts.COLUMN_PHONE, contact.getPhone())
@@ -115,9 +114,6 @@ class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
     fun updateContact(contact: Contact): Int {
-
-        Log.i("Update",contact.toString())
-
         val args = arrayOf(contact.getId().toString())
         val db = this.writableDatabase
         val contentValues = ContentValues()

@@ -120,7 +120,6 @@ class FormActivity : AppCompatActivity() {
                     }
                     finish()
                 }
-
             }
             else {
                 Toast.makeText(applicationContext, "Invalid phone number.",Toast.LENGTH_SHORT).show()
