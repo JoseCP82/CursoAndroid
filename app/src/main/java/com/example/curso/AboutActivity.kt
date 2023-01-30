@@ -1,6 +1,7 @@
 package com.example.curso
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -11,17 +12,12 @@ import com.example.curso.databinding.ActivityAboutBinding
 
 class AboutActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAboutBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityAboutBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_about)
     }
 
-    fun closeAbout(){
+    fun closeAbout(view: View){
         finish()
-        System.exit(0)
     }
 }
