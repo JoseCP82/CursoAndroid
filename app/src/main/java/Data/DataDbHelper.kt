@@ -84,7 +84,7 @@ class DataDbHelper (context: Context):SQLiteOpenHelper(context, DATABASE_NAME, n
     @SuppressLint("Range")
     fun getAllContacts(): ArrayList<Contact> {
         val contacts: ArrayList<Contact> = ArrayList()
-        val query = "SELECT * FROM "+Tables.Contacts.TABLE_NAME
+        val query = "SELECT * FROM "+Tables.Contacts.TABLE_NAME+" ORDER BY name"
         val db = this.readableDatabase
         val cursor: Cursor?
 
